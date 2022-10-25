@@ -1,32 +1,21 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
-  </div>
+  <el-button>123</el-button>
 </template>
 
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+import { registerAPI } from '@/api'
+export default {
+  name: 'App',
+  created () {
+    this.registerAPI()
+  },
+  methods: {
+    async registerAPI () {
+      const res = await registerAPI()
+      console.log(res)
     }
   }
 }
-</style>
+</script>
+
+<style lang="less" scoped></style>
