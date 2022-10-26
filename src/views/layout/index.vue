@@ -37,6 +37,7 @@
 <script>
 export default {
   methods: {
+    // 退出登录
     logoutFn() {
       this.$confirm('确定要退出吗?', '提示', {
         confirmButtonText: '确定',
@@ -45,12 +46,13 @@ export default {
       })
         .then(() => {
           // TODO：执行退出登录的操作
-          // 1. 清空 token
+          // 1. 确定->清空 token
           this.$store.commit('updateToken', '')
           // 2. 跳转到登录页面
           this.$router.push('/login')
         })
         .catch(err => err)
+        // 取消->
     }
   }
 }

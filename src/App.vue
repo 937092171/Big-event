@@ -3,15 +3,12 @@
 </template>
 
 <script>
-import { registerAPI } from '@/api'
+import { getUserInfoAPI } from '@/api'
 export default {
-  name: 'App',
-  created() {},
-  methods: {
-    async registerAPI() {
-      const res = await registerAPI()
+  created() {
+    getUserInfoAPI().then(res => {
       console.log(res)
-    }
+    })
   }
 }
 </script>
