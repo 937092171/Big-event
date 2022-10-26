@@ -6,9 +6,7 @@
 import { registerAPI } from '@/api'
 export default {
   name: 'App',
-  created() {
-    this.registerAPI()
-  },
+  created() {},
   methods: {
     async registerAPI() {
       const res = await registerAPI()

@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { registerAPI } from '@/api'
 export default {
   name: 'my-register',
   data() {
@@ -72,13 +73,22 @@ export default {
     }
   },
   methods: {
-    // 注册->点击事件
+    // 注册新用户
     registerFn() {
-      // JS兜底校验
-      this.$refs.form.validate(valid => {
+      // 进行表单验证
+      this.$refs.form.validate(async valid => {
         if (valid) {
-          // 通过校验，拿到绑定的数据
+          // 通过校验，拿到用户输入的内容
           console.log(this.form)
+          // 1.调用接口
+          const { data: res } = await registerAPI(this.form)
+          console.log(res)
+          // 2.注册失败，提示用户
+          if (res.code !== 0) return this.$message.error(res.message)
+          // 3.注册成功，提示用户
+          this.$message.success(res.message)
+          // 4.登录成功，跳转页面
+          this.$router.push('/login')
         } else {
           return false// 阻止默认提交行为(表单下面红色提示会自动出现)
         }
