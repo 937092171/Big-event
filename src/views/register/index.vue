@@ -72,7 +72,18 @@ export default {
     }
   },
   methods: {
-    registerFn() {}
+    // 注册->点击事件
+    registerFn() {
+      // JS兜底校验
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          // 通过校验，拿到绑定的数据
+          console.log(this.form)
+        } else {
+          return false// 阻止默认提交行为(表单下面红色提示会自动出现)
+        }
+      })
+    }
   }
 }
 </script>
