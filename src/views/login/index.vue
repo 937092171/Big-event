@@ -26,6 +26,7 @@
 
 <script>
 import { loginAPI } from '../../api'
+import { mapMutations } from 'vuex'
 export default {
   name: 'my-login',
   data() {
@@ -49,17 +50,20 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['updateToken']),
+    // 登录->点击事件
     loginFn() {
       this.$refs.loginRef.validate(async valid => {
         if (valid) {
-          console.log(this.loginForm)
+          // console.log(this.loginForm)
           // 1.调用接口
           const { data: res } = await loginAPI(this.loginForm)
-          console.log(res)
           // 判断后台是否有用户数据
           if (res.code === 0) {
             // 2.登录成功，提示用户
             this.$message.success(res.message)
+            // 提交给mutations 把token字符串保存到vuex中
+            this.updateToken(res.token)
           } else {
             // 3.登录失败，提示用户
             this.$message.error(res.message)
