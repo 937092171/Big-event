@@ -12,11 +12,11 @@
             <img src="../../assets/images/logo.png" alt="" class="avatar" />
             <span>个人中心</span>
           </template>
-          <el-menu-item index="1-1"><i class="el-icon-s-operation"></i>基本资料</el-menu-item>
-          <el-menu-item index="1-2"><i class="el-icon-camera"></i>更换头像</el-menu-item>
+          <el-menu-item index="1-1"><i class="el-icon-user"></i>基本资料</el-menu-item>
+          <el-menu-item index="1-2"><i class="el-icon-picture-outline"></i>更换头像</el-menu-item>
           <el-menu-item index="1-3"><i class="el-icon-key"></i>重置密码</el-menu-item>
         </el-submenu>
-        <el-menu-item index="2"><i class="el-icon-switch-button"></i>退出</el-menu-item>
+        <el-menu-item index="2" @click="logoutFn"><i class="el-icon-switch-button"></i>退出</el-menu-item>
       </el-menu>
     </el-header>
     <el-container>
@@ -36,7 +36,23 @@
 
 <script>
 export default {
-  name: 'my-layout'
+  methods: {
+    logoutFn() {
+      this.$confirm('确定要退出吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          // TODO：执行退出登录的操作
+          // 1. 清空 token
+          this.$store.commit('updateToken', '')
+          // 2. 跳转到登录页面
+          this.$router.push('/login')
+        })
+        .catch(err => err)
+    }
+  }
 }
 </script>
 

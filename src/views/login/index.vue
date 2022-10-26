@@ -64,6 +64,7 @@ export default {
             this.$message.success(res.message)
             // 提交给mutations 把token字符串保存到vuex中
             this.updateToken(res.token)
+            // 跳转到首页
             this.$router.push('/')
           } else {
             // 3.登录失败，提示用户
