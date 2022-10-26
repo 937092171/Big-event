@@ -87,7 +87,7 @@ export default {
           if (res.code !== 0) return this.$message.error(res.message)
           // 3.注册成功，提示用户
           this.$message.success(res.message)
-          // 4.登录成功，跳转页面
+          // 4.注册成功，跳转登录页面
           this.$router.push('/login')
         } else {
           return false// 阻止默认提交行为(表单下面红色提示会自动出现)
