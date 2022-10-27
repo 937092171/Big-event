@@ -27,6 +27,40 @@
           <img src="../../assets/images/logo.png" alt="" v-else />
           <span>欢迎 {{ nickname || username }}</span>
         </div>
+        <el-menu default-active="/home" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" background-color="#23262E" text-color="#fff" active-text-color="#409EFF" unique-opened>
+          <el-menu-item index="/home">
+            <i class="el-icon-s-home"></i>
+            <span>首页</span>
+          </el-menu-item>
+          <el-submenu index="1">
+            <template slot="title">
+              <i class="el-icon-s-order"></i>
+              <span>文章管理</span>
+            </template>
+            <el-menu-item index="">
+              <i class="el-icon-s-home"></i>
+              <span>首页</span>
+            </el-menu-item>
+            <el-menu-item index="">
+              <i class="el-icon-s-home"></i>
+              <span>首页</span>
+            </el-menu-item>
+          </el-submenu>
+          <el-submenu index="2">
+            <template slot="title">
+              <i class="el-icon-user-solid"></i>
+              <span>个人中心</span>
+            </template>
+            <el-menu-item index="">
+              <i class="el-icon-s-home"></i>
+              <span>首页</span>
+            </el-menu-item>
+            <el-menu-item index="">
+              <i class="el-icon-s-home"></i>
+              <span>首页</span>
+            </el-menu-item>
+          </el-submenu>
+        </el-menu>
       </el-aside>
       <el-container>
         <!-- 页面主体区域 -->
@@ -46,6 +80,12 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'my-layout',
   methods: {
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath)
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath)
+    },
     // 退出登录
     logoutFn() {
       this.$confirm('确定要退出吗?', '提示', {
@@ -65,6 +105,7 @@ export default {
       // 取消->
     }
   },
+  // 映射getters的方式定义计算属性
   computed: {
     ...mapGetters(['nickname', 'username', 'user_pic'])
   }
