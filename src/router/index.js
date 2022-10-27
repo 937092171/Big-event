@@ -36,9 +36,12 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const token = store.state.token
   if (token && !store.state.userInfo.username) {
+    // 有token但是没有用户信息，才去请求用户信息保存到vuex里
+    // 调用actions里方法请求数据
     store.dispatch('getUserInfoActions')
+    // 下次切换页面vuex里有用户信息数据就不会重复请求用户信息
   }
-  next()
+  next() // 路由放行
 })
 export default router
 // 退出登录，重新登录，只走相关组件代码(异步dom切换，不会导致所有代码重新执行，App.vue不走)
