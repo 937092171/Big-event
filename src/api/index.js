@@ -42,6 +42,10 @@ export const loginAPI = ({ username, password }) => {
   })
 }
 
+/**
+ * 获取用户信息
+ * @returns Promise对象
+ */
 export const getUserInfoAPI = () => {
   return request({
     url: '/my/userinfo',
