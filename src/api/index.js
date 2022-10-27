@@ -56,3 +56,15 @@ export const getUserInfoAPI = () => {
     }
   })
 }
+/**
+ * 获取-侧边栏数据
+ * @returns Promise对象
+ */
+export const getMenuListAPI = () => {
+  return request({
+    url: '/my/menus',
+    headers: {
+      Authorization: store.state.token
+    }
+  })
+}

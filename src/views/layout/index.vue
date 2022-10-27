@@ -27,39 +27,23 @@
           <img src="../../assets/images/logo.png" alt="" v-else />
           <span>欢迎 {{ nickname || username }}</span>
         </div>
-        <el-menu default-active="/home" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" background-color="#23262E" text-color="#fff" active-text-color="#409EFF" unique-opened>
-          <el-menu-item index="/home">
-            <i class="el-icon-s-home"></i>
-            <span>首页</span>
-          </el-menu-item>
-          <el-submenu index="1">
-            <template slot="title">
-              <i class="el-icon-s-order"></i>
-              <span>文章管理</span>
-            </template>
-            <el-menu-item index="">
-              <i class="el-icon-s-home"></i>
-              <span>首页</span>
+        <el-menu default-active="/home" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" background-color="#23262E" text-color="#fff" active-text-color="#409EFF" unique-opened router>
+          <template v-for="item in menus">
+            <el-menu-item v-if="!item.children" :index="item.indexPath" :key="item.indexPath">
+              <i :class="item.icon"></i>
+              <span>{{ item.title }}</span>
             </el-menu-item>
-            <el-menu-item index="">
-              <i class="el-icon-s-home"></i>
-              <span>首页</span>
-            </el-menu-item>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-user-solid"></i>
-              <span>个人中心</span>
-            </template>
-            <el-menu-item index="">
-              <i class="el-icon-s-home"></i>
-              <span>首页</span>
-            </el-menu-item>
-            <el-menu-item index="">
-              <i class="el-icon-s-home"></i>
-              <span>首页</span>
-            </el-menu-item>
-          </el-submenu>
+            <el-submenu v-else :index="item.indexPath" :key="item.indexPath">
+              <template slot="title">
+                <i :class="item.icon"></i>
+                <span>{{ item.title }}</span>
+              </template>
+              <el-menu-item v-for="obj, index in item.children" :index="obj.indexPath" :key="index">
+                <i :class="obj.icon"></i>
+                <span>{{ obj.title }}</span>
+              </el-menu-item>
+            </el-submenu>
+          </template>
         </el-menu>
       </el-aside>
       <el-container>
@@ -76,9 +60,14 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import { getMenuListAPI } from '@/api'
 export default {
   name: 'my-layout',
+  data() {
+    return {
+      menus: [] // 侧边栏的数据
+    }
+  },
   methods: {
     handleOpen(key, keyPath) {
       console.log(key, keyPath)
@@ -103,7 +92,16 @@ export default {
         })
         .catch(err => err)
       // 取消->
+    },
+    // 请求-侧边栏数据
+    async getMenuListFn() {
+      const res = await getMenuListAPI()
+      this.menus = res.data.data
     }
+  },
+  created() {
+    // 请求-侧边栏数据
+    this.getMenuListFn()
   },
   // 映射getters的方式定义计算属性
   computed: {
