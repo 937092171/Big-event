@@ -1,5 +1,4 @@
 import request from '@/utils/request'// 引入request对象
-import store from '@/store' // 引入store对象
 // 形参obj的值
 // obj = { username:'',password:'值',repassword: ''}
 // 左侧想要对象解构赋值(语法4)
@@ -48,12 +47,9 @@ export const loginAPI = ({ username, password }) => {
  */
 export const getUserInfoAPI = () => {
   return request({
-    url: '/my/userinfo',
+    url: '/my/userinfo'
     // method不写默认就是'get'方式请求
     // 传参给后台: params( 查询字符串query), data( 请求体body), headers( 请求头)
-    headers: {
-      Authorization: store.state.token
-    }
   })
 }
 /**
@@ -62,9 +58,6 @@ export const getUserInfoAPI = () => {
  */
 export const getMenuListAPI = () => {
   return request({
-    url: '/my/menus',
-    headers: {
-      Authorization: store.state.token
-    }
+    url: '/my/menus'
   })
 }
