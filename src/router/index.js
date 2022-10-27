@@ -7,8 +7,15 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    component: () => import('@/views/layout')
+    component: () => import('@/views/layout'),
     // 默认打开首页
+    redirect: '/home',
+    children: [
+      {
+        path: 'home',
+        component: () => import('@/views/home')
+      }
+    ]
   },
   {
     path: '',
@@ -32,7 +39,7 @@ const router = new VueRouter({
   routes
 })
 
-const whiteList = ['/login', '/reg'] // 白名单 无需登录就可以访问地址
+const whiteList = ['/login', '/leg'] // 白名单 无需登录就可以访问地址
 
 // 全局前置路由守卫
 router.beforeEach((to, from, next) => {
