@@ -32,16 +32,31 @@ const router = new VueRouter({
   routes
 })
 
+const whiteList = ['/login', '/reg'] // 白名单 无需登录就可以访问地址
+
 // 全局前置路由守卫
 router.beforeEach((to, from, next) => {
   const token = store.state.token
-  if (token && !store.state.userInfo.username) {
-    // 有token但是没有用户信息，才去请求用户信息保存到vuex里
-    // 调用actions里方法请求数据
-    store.dispatch('getUserInfoActions')
-    // 下次切换页面vuex里有用户信息数据就不会重复请求用户信息
+  if (token) {
+    // 登录了
+    if (!store.state.userInfo.username) {
+      // 有token但是没有用户信息，才去请求用户信息保存到vuex里
+      // 调用actions里方法请求数据
+      store.dispatch('getUserInfoActions')
+      // 下次切换页面vuex里有用户信息数据就不会重复请求用户信息
+    }
+    next() // 路由放行
+  } else {
+    // 未登录
+    // 数组.includes(值)，作用：判断值是否在数组里出现过，出现过原地返回true
+    if (whiteList.includes(to.path)) {
+      // 未登录，可以访问的路由地址，则放行(路由全局前置守卫不会再次触发了，而是匹配路由表，让组件挂载
+      next()
+    } else {
+      // next()强制切换到登录路径上
+      next('/login')
+    }
   }
-  next() // 路由放行
 })
 export default router
 // 退出登录，重新登录，只走相关组件代码(异步dom切换，不会导致所有代码重新执行，App.vue不走)
