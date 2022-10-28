@@ -27,7 +27,7 @@
           <img src="../../assets/images/logo.png" alt="" v-else />
           <span>欢迎 {{ nickname || username }}</span>
         </div>
-        <el-menu default-active="/home" class="el-menu-vertical-demo" background-color="#23262E" text-color="#fff" active-text-color="#409EFF" unique-opened router>
+        <el-menu default-active="$route.path" class="el-menu-vertical-demo" background-color="#23262E" text-color="#fff" active-text-color="#409EFF" unique-opened router>
           <template v-for="item in menus">
             <!-- 不包含子菜单的“一级菜单” -->
             <el-menu-item :index="item.indexPath" :key="item.indexPath" v-if="!item.children">
