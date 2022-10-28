@@ -16,13 +16,14 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitFn">提交修改</el-button>
-        <el-button>重置</el-button>
+        <el-button @click="resetFn">重置</el-button>
       </el-form-item>
     </el-form>
   </el-card>
 </template>
 
 <script>
+import { updateUserInfoAPI } from '@/api'
 export default {
   name: 'UserInfo',
   data() {
@@ -43,6 +44,31 @@ export default {
           { type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
         ]
       }
+    }
+  },
+  methods: {
+    // 提交修改->点击事件
+    submitFn() {
+      this.$refs.userFormRef.validate(async valid => {
+        if (valid) {
+          console.log(this.userForm)
+          this.userForm.id = this.$store.state.userInfo.id
+          // 调用更新用户基本信息接口, 把用户在页面输入的新内容传给后台保存
+          const { data: res } = await updateUserInfoAPI(this.userForm)
+          if (res.code !== 0) return this.$message.error('更新用户信息失败！')
+          // 更新用户信息成功，刷新 Vuex 中的数据
+          this.$message.success('更新成功！')
+          // 重新让vuex获取下最新的用户数据
+          this.$store.dispatch('getUserInfoActions')
+        } else {
+          // 未通过校验
+          return false
+        }
+      })
+    },
+    // 重置按钮
+    resetFn() {
+      this.$refs.userFormRef.resetFields()
     }
   }
 }

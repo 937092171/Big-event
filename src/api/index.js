@@ -52,6 +52,7 @@ export const getUserInfoAPI = () => {
     // 传参给后台: params( 查询字符串query), data( 请求体body), headers( 请求头)
   })
 }
+
 /**
  * 获取-侧边栏数据
  * @returns Promise对象
@@ -59,5 +60,24 @@ export const getUserInfoAPI = () => {
 export const getMenuListAPI = () => {
   return request({
     url: '/my/menus'
+  })
+}
+
+/**
+ * 更新-用户基本资料
+ * @param {*} param0 { nickname：用户昵称}
+ * @returns Promise对象
+ */
+export const updateUserInfoAPI = ({ id, username, nickname, email, user_pic }) => {
+  return request({
+    usl: '/my/userinfo',
+    method: 'PUT',
+    data: {
+      id,
+      username,
+      nickname,
+      email,
+      user_pic
+    }
   })
 }
