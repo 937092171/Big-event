@@ -68,6 +68,9 @@ export default {
     },
     // 重置按钮
     resetFn() {
+      // this.userForm.nickname = ''
+      // this.userForm.email = ''
+      // el-form提供了一个重置表单(并且还能重置报错提示)
       this.$refs.userFormRef.resetFields()
     }
   }
