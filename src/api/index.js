@@ -70,7 +70,7 @@ export const getMenuListAPI = () => {
  */
 export const updateUserInfoAPI = ({ id, username, nickname, email, user_pic }) => {
   return request({
-    usl: '/my/userinfo',
+    url: '/my/userinfo',
     method: 'PUT',
     data: {
       id,
@@ -94,5 +94,23 @@ export const updateAvatarAPI = (avatar) => {
     data: {
       avatar
     }
+  })
+}
+
+/**
+ * 更新-用户密码
+ * @param {*} param0
+ * @returns Promise对象
+ */
+export const updatePwdAPI = ({ old_pwd, new_pwd, re_pwd }) => {
+  return request({
+    url: '/my/updatepwd',
+    method: 'PATCH',
+    data: {
+      old_pwd,
+      new_pwd,
+      re_pwd
+    }
+
   })
 }

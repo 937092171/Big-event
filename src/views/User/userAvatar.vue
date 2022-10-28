@@ -57,10 +57,13 @@ export default {
         }
       }
     },
+    // 开始上传头像
     async uploadFn() {
       const { data: res } = await updateAvatarAPI(this.avatar)
       if (res.code !== 0) return this.$message.error(res.message)
+      // 更新头像成功
       this.$message.success(res.message)
+      // 再请求一次后台更新vuex里的值
       this.$store.dispatch('getUserInfoActions')
     }
   }

@@ -22,6 +22,10 @@ const routes = [
       {
         path: 'user-avatar',
         component: () => import('@/views/User/userAvatar')
+      },
+      {
+        path: 'user-pwd',
+        component: () => import('@/views/User//userPwd')
       }
     ]
   },
@@ -47,7 +51,7 @@ const router = new VueRouter({
   routes
 })
 
-const whiteList = ['/login', '/leg'] // 白名单 无需登录就可以访问地址
+const whiteList = ['/login', '/reg'] // 白名单 无需登录就可以访问地址
 
 // 全局前置路由守卫
 router.beforeEach((to, from, next) => {
