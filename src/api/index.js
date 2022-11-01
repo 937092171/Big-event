@@ -171,3 +171,62 @@ export const delArtCateAPI = (id) => {
     }
   })
 }
+
+/**
+ * 发布-文章
+ * @param {*} fd FormData 表单数据对象
+ * @returns Promise对象
+ */
+export const uploadArticleAPI = (fd) => {
+  return request({
+    url: '/my/article/add',
+    method: 'POST',
+    data: fd
+    // {} 如果是一个普通对象，axios会把它转成JSON字符串在请求体里交给后台
+    // 这个接口文档要求请求体里是一个FormData类型(表单数据对象)携带文件给后台
+  })
+}
+
+/**
+ * 获取-文章列表
+ * @param {*} param0 { pagenum：当前页码数, pagesize：当前页面需要的数据条数, cate_id：文章分类id, state：文章状态 }
+ * @returns Promise对象
+ */
+export const getArticleListAPI = ({ pagenum, pagesize, cate_id, state }) => {
+  return request({
+    url: '/my/article/list',
+    params: {
+      pagenum,
+      pagesize,
+      cate_id,
+      state
+    }
+  })
+}
+/**
+ * 获取-文章详情
+ * @param {*}  id：文章分类id
+ * @returns Promise对象
+ */
+export const getArticleDetailFn = (id) => {
+  return request({
+    url: '/my/article/info',
+    params: {
+      id
+    }
+  })
+}
+/**
+ * 删除-文章
+ * @param {*} id：文章id
+ * @returns Promise对象
+ */
+export const delArticleAPI = (id) => {
+  return request({
+    url: '/my/article/info',
+    method: 'DELETE',
+    params: {
+      id
+    }
+  })
+}
