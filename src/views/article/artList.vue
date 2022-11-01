@@ -55,7 +55,7 @@
     </el-card>
 
     <!-- 发表文章的 Dialog 对话框 -->
-    <el-dialog title="发表文章" :visible.sync="pubDialogVisible" fullscreen :before-close="handleClose" @click="dialogCloserFn">
+    <el-dialog title="发表文章" :visible.sync="pubDialogVisible" fullscreen :before-close="handleClose" @closed="dialogCloserFn">
       <!-- 发布文章的对话框 -->
       <el-form :model="pubForm" :rules="pubFormRules" ref="pubFormRef" label-width="100px">
         <el-form-item label="文章标题" prop="title">
@@ -68,7 +68,7 @@
         </el-form-item>
         <el-form-item label="文章内容" prop="content">
           <!-- 使用 v-model 进行双向的数据绑定 -->
-          <quill-editor v-model="pubForm.content" @change="contentChangeFn"></quill-editor>
+          <quill-editor v-model="pubForm.content" @blur="contentChangeFn"></quill-editor>
         </el-form-item>
         <el-form-item label="文章封面" prop="cover_img">
           <!-- 用来显示封面的图片 -->
@@ -118,9 +118,6 @@ export default {
   name: 'ArtList',
   data() {
     return {
-      baseURLR: baseURL,
-      detailVisible: false, // 控制文章详情对话框的显示与隐藏
-      artDetail: {}, // 文章的详情信息对象
       q: {
         // 查询参数对象
         pagenum: 1, // 默认拿第一页的数据
@@ -150,12 +147,15 @@ export default {
           }
         ],
         cate_id: [{ required: true, message: '请选择文章标题', trigger: 'change' }],
-        content: [{ required: true, message: '请输入文章内容', trigger: 'change' }],
+        content: [{ required: true, message: '请输入文章内容', trigger: 'blur' }],
         cover_img: [{ required: true, message: '请选择封面', trigger: 'change' }]
       },
       cateList: [], // 保存文章分类列表
       artList: [], // 文章的列表数据
-      total: 0 // 总数据条数
+      total: 0, // 总数据条数
+      detailVisible: false, // 控制文章详情对话框的显示与隐藏
+      artDetail: {}, // 文章的详情信息对象
+      baseURLR: baseURL // 基地址
     }
   },
   created() {
@@ -181,6 +181,7 @@ export default {
     showPubDialogFn() {
       this.pubDialogVisible = true
     },
+    // 对话框关闭前的回调
     async handleClose(done) {
       const confirmResult = await this.$confirm('此操作将导致文章信息丢失, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -210,35 +211,41 @@ export default {
         const url = URL.createObjectURL(files[0])
         this.$refs.imgRef.setAttribute('src', url)
       }
-      // 让表单单独校验封面的值
-      this.$refs.pubFormRef.validateField('cover_img')
     },
     // 表单里(点击发布/存为草稿)按钮点击事件->准备调用后端接口
     pubArticleFn(state) {
-      this.pubForm.state = state // 保存到统一表单对象上
-
-      // 兜底校验
+      // 1.设置发布状态
+      this.pubForm.state = state
+      // 2.表单预校验
       this.$refs.pubFormRef.validate(async valid => {
-        if (valid) {
-          console.log(this.pubForm)
-          const fd = new FormData()
-          // fd.append('参数名', 值)
-          fd.append('title', this.pubForm.title)
-          fd.append('cate_id', this.pubForm.cate_id)
-          fd.append('content', this.pubForm.content)
-          fd.append('cover_img', this.pubForm.cover_img)
-          fd.append('state', this.pubForm.state)
-
-          const { data: res } = await uploadArticleAPI(fd)
-          console.log(res)
-          if (res.code !== 0) return this.$message.error('发布文章失败！')
-          this.$message.success('发布文章成功！')
-          // 关闭对话框
-          this.pubDialogVisible = false
-          this.getArtListFn()
-        } else {
-          return false // 阻止默认行为(因为按钮有默认提交行为)
+        if (!valid) return this.$message.error('请完善文章信息！')
+        // 3.判断是否提供了文章封面
+        if (!this.pubForm.cover_img) {
+          return this.$message.error('请选择文章封面！')
         }
+        // 4.TODO: 发布文章
+        // 创建FormData对象
+        const fd = new FormData()
+
+        // 向FormData中追加数据
+        // fd.append('参数名', 值)
+        // fd.append('title', this.pubForm.title)
+        // fd.append('cate_id', this.pubForm.cate_id)
+        // fd.append('content', this.pubForm.content)
+        // fd.append('cover_img', this.pubForm.cover_img)
+        // fd.append('state', this.pubForm.state)
+        Object.keys(this.pubForm).forEach(key => {
+          fd.append(key, this.pubForm[key])
+        })
+
+        // 发起请求
+        const { data: res } = await uploadArticleAPI(fd)
+        if (res.code !== 0) return this.$message.error('发布文章失败！')
+        this.$message.success('发布文章成功！')
+        // 关闭对话框
+        this.pubDialogVisible = false
+        // 刷新文章列表数据
+        this.getArtListFn()
       })
     },
     // 富文本编辑器内容改变触发此事件方法
@@ -249,6 +256,8 @@ export default {
     // 新增文章->对话框关闭时->清空表单
     dialogCloserFn() {
       this.$refs.pubFormRef.resetFields()
+      // 因为这个变量对应的标签不是表单绑定的, 所以需要单独控制
+      this.$refs.imgRef.setAttribute('src', defaultImg)
     },
     handleSizeChangeFn(newSize) {
       // newSize:当前需要每页显示的条数
@@ -293,7 +302,8 @@ export default {
       // 数组里只保存当前页的数据，别的页的需要传参q给后台获取覆盖
       // 1的原因：虽然你调用删除接口但是那是后端删除，前端数组里你没有代码去修改它
       if (this.artList.length === 1) {
-        if (this.q.pagenum > 1) { // 保证pagenum最小值为1
+        if (this.q.pagenum > 1) {
+          // 保证pagenum最小值为1
           this.q.pagenum--
         }
       }
