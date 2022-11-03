@@ -12,7 +12,7 @@
               <el-option :label="item.cate_name" :value="item.id" v-for="item in cateList" :key="item.id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="发布状态" style="margin-left: 15px;">
+          <el-form-item label="发布状态" style="margin-left: 15px">
             <el-select v-model="q.state" placeholder="请选择状态" size="small">
               <el-option label="已发布" value="已发布"></el-option>
               <el-option label="草稿" value="草稿"></el-option>
@@ -28,7 +28,7 @@
       </div>
 
       <!-- 文章表格区域 -->
-      <el-table :data="artList" style="width: 100%;" border stripe>
+      <el-table :data="artList" style="width: 100%" border stripe>
         <el-table-column label="文章标题" prop="title">
           <template v-slot="scope">
             <el-link type="primary" @click="showDetailFn(scope.row.id)">{{ scope.row.title }}</el-link>
@@ -49,9 +49,7 @@
       </el-table>
 
       <!-- 分页区域 -->
-      <el-pagination @size-change="handleSizeChangeFn" @current-change="handleCurrentChangeFn" :current-page.sync="q.pagenum" :page-sizes="[2, 3, 5, 10]" :page-size.sync="q.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
-      </el-pagination>
-
+      <el-pagination @size-change="handleSizeChangeFn" @current-change="handleCurrentChangeFn" :current-page.sync="q.pagenum" :page-sizes="[2, 3, 5, 10]" :page-size.sync="q.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total"> </el-pagination>
     </el-card>
 
     <!-- 发表文章的 Dialog 对话框 -->
@@ -62,7 +60,7 @@
           <el-input v-model="pubForm.title" placeholder="请输入标题"></el-input>
         </el-form-item>
         <el-form-item label="文章分类" prop="cate_id">
-          <el-select v-model="pubForm.cate_id" placeholder="请选择分类" style="width: 100%;">
+          <el-select v-model="pubForm.cate_id" placeholder="请选择分类" style="width: 100%">
             <el-option :label="item.cate_name" :value="item.id" v-for="item in cateList" :key="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -75,7 +73,7 @@
           <img src="../../assets/images/cover.jpg" alt="" class="cover-img" ref="imgRef" />
           <br />
           <!-- 文件选择框，默认被隐藏 -->
-          <input type="file" style="display: none;" accept="image/*" ref="iptFileRef" @change="onCoverChangeFn" />
+          <input type="file" style="display: none" accept="image/*" ref="iptFileRef" @change="onCoverChangeFn" />
           <!-- 选择封面的按钮 -->
           <el-button type="text" @click="chooseImgFn">+ 选择封面</el-button>
         </el-form-item>
@@ -100,7 +98,7 @@
       <el-divider></el-divider>
 
       <!-- 文章的封面 -->
-      <img v-if="artDetail.cover_img" :src="baseURLR + artDetail.cover_img " alt="" />
+      <img v-if="artDetail.cover_img" :src="baseURLR + artDetail.cover_img" alt="" />
 
       <!-- 文章的详情 -->
       <div v-html="artDetail.content" class="detail-box"></div>

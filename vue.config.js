@@ -1,7 +1,11 @@
 const { defineConfig } = require('@vue/cli-service')
+// 需要排除的包、对象
 let externals = {}
+// 需要配置的 CDN 链接
 let CDN = { css: [], js: [] }
+// 判断是否是生产环境
 const isProduction = process.env.NODE_ENV === 'production'
+// 如果是生产环境，需要执行以下逻辑
 if (isProduction) {
   externals = {
     /**
@@ -67,3 +71,9 @@ module.exports = defineConfig({
     })
   }
 })
+// 情况1:开发环境
+// (1): externals 无值(不排除第三方包)
+// (2): index. html里不引入cdn地址
+// 情况2:生产环境
+// (1): externals有值(排除第三方包)
+// (2): index . htm1引入cdn地址
